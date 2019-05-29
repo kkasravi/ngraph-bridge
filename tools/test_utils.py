@@ -125,7 +125,7 @@ def run_ngtf_pytests(venv_dir, build_dir):
 
     cmd = 'python -m pytest ' + ('--junitxml=%s/xunit_pytest.xml' % build_dir)
     env = os.environ.copy()
-    new_paths = venv_dir + '/bin/python3:' + os.path.abspath(build_dir)
+    new_paths = venv_dir + '/bin/python:' + os.path.abspath(build_dir)
     if 'PYTHONPATH' in env:
         env["PYTHONPATH"] = new_paths + ":" + env["PYTHONPATH"]
     else:
