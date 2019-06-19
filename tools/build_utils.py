@@ -444,7 +444,7 @@ def build_in_docker(args):
     vargs = vars(args)
     for arg in vargs:
         if arg != "build_in_docker":
-            cmd.append("--"+arg+"="+vargs[arg])
+            cmd.append("--"+arg+"="+str(vargs[arg]))
     command_executor(cmd)
 
 
@@ -454,7 +454,7 @@ def run_in_docker(args):
     vargs = vars(args)
     for arg in vargs:
         if arg != "run_in_docker":
-            cmd.append("--"+arg+"="+vargs[arg])
+            cmd.append("--"+arg+"="+str(vargs[arg]))
     command_executor(cmd)
     #command_executor(["docker", "run", --name ngtf -v "$(pwd)":/ngtf -w /ngtf tensorflow/tensorflow:1.13.1-py3 sh -c './build_ngtf.sh && /bin/bash' || docker start -ia
 
