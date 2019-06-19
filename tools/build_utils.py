@@ -439,5 +439,5 @@ def apply_patch(patch_file):
         printed_lines[0]), "Error applying the patch."
 
 def build_in_docker():
-    command_executor(["docker", "build", "-tag", "ngraph-bridge:latest", "."])
+    command_executor(["docker", "build", "--tag", "ngraph-bridge:latest", "."])
 
