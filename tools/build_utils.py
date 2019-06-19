@@ -438,11 +438,21 @@ def apply_patch(patch_file):
     assert cmd.returncode == 0 or 'patch detected!  Skipping patch' in str(
         printed_lines[0]), "Error applying the patch."
 
-def base_build():
-    command_executor(["docker", "build", "--tag", "ngtf", "."])
+def build_in_docker(args):
+    cmd = ["docker", "build", "--tag", "ngtf", "."]
+    for arg in args:
+        if arg != "build_in_docker":
+            cmd.append("--"+arg)
+            cmd.append(args[arg])
+    command_executor(cmd)
 
 def run_in_docker():
     pwd = os.getcwd()
-    command_executor(["docker", "run", "-v", pwd+":/ngtf", "-w", "/ngtf", "ngtf", "sh", "-c", "./build_ngtf.sh"])
+    cmd = ["docker", "run", "-v", pwd+":/ngtf", "-w", "/ngtf", "ngtf", "sh", "-c", "./build_ngtf.sh"]
+    for arg in args:
+        if arg != "run_in_docker":
+            cmd.append("--"+arg)
+            cmd.append(args[arg])
+    command_executor(cmd)
     #command_executor(["docker", "run", --name ngtf -v "$(pwd)":/ngtf -w /ngtf tensorflow/tensorflow:1.13.1-py3 sh -c './build_ngtf.sh && /bin/bash' || docker start -ia
 
