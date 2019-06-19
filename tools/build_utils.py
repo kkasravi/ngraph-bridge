@@ -437,3 +437,7 @@ def apply_patch(patch_file):
     # will fail
     assert cmd.returncode == 0 or 'patch detected!  Skipping patch' in str(
         printed_lines[0]), "Error applying the patch."
+
+def build_in_docker():
+    command_executor(["docker", "build", "-tag", "ngraph-bridge:latest", "."])
+
