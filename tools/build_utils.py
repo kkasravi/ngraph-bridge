@@ -51,7 +51,7 @@ def command_executor(cmd, verbose=False, msg=None, stdout=None, stderr=None):
       - command_executor('ls -lrt')
       - command_executor(['ls', '-lrt'])
     '''
-    if type(cmd) == type([]):  #if its a list, convert to string
+    if type(cmd) == type([]):  # if its a list, convert to string
         cmd = ' '.join(cmd)
     if verbose:
         tag = 'Running COMMAND: ' if msg is None else msg
@@ -159,7 +159,7 @@ def setup_venv(venv_dir):
     # Install the pip packages
     cmdpart = ["pip", "install"]
     if os.getenv("IN_DOCKER") != None:
-        cmdpart.append("--cache-dir="+os.getcwd())
+        cmdpart.append("--cache-dir=" + os.getcwd())
     package_list = [
         "-U",
         "pip",
@@ -186,12 +186,11 @@ def setup_venv(venv_dir):
     # Print the current packages
     cmd = ["pip", "list"]
     if os.getenv("IN_DOCKER") != None:
-        cmd.append("--cache-dir="+os.getcwd())
+        cmd.append("--cache-dir=" + os.getcwd())
     command_executor(cmd)
 
 
 def build_tensorflow(venv_dir, src_dir, artifacts_dir, target_arch, verbosity):
-
     base = sys.prefix
     python_lib_path = os.path.join(base, 'lib', 'python%s' % sys.version[:3],
                                    'site-packages')
@@ -262,7 +261,6 @@ def build_tensorflow(venv_dir, src_dir, artifacts_dir, target_arch, verbosity):
 
 
 def build_tensorflow_cc(src_dir, artifacts_dir, target_arch, verbosity):
-
     pwd = os.getcwd()
 
     base = sys.prefix
@@ -316,8 +314,8 @@ def build_tensorflow_cc(src_dir, artifacts_dir, target_arch, verbosity):
 
 def copy_tf_cc_lib_to_artifacts(artifacts_dir, tf_prebuilt):
     tf_cc_lib_name = 'libtensorflow_cc.so.1'
-    #if (platform.system() == 'Darwin'):
-    #tf_cc_lib_name = 'libtensorflow_cc.1.dylib'
+    # if (platform.system() == 'Darwin'):
+    # tf_cc_lib_name = 'libtensorflow_cc.1.dylib'
     try:
         doomed_file = os.path.join(artifacts_dir, tf_cc_lib_name)
         os.unlink(doomed_file)
@@ -338,7 +336,7 @@ def copy_tf_cc_lib_to_artifacts(artifacts_dir, tf_prebuilt):
 def locate_tf_whl(tf_whl_loc):
     possible_whl = [i for i in os.listdir(tf_whl_loc) if '.whl' in i]
     assert len(possible_whl
-              ) == 1, "Expected 1 TF whl file, but found " + len(possible_whl)
+               ) == 1, "Expected 1 TF whl file, but found " + len(possible_whl)
     tf_whl = os.path.abspath(tf_whl_loc + '/' + possible_whl[0])
     assert os.path.isfile(tf_whl), "Did not find " + tf_whl
     return tf_whl
@@ -376,7 +374,6 @@ def copy_tf_to_artifacts(artifacts_dir, tf_prebuilt):
 
 
 def install_tensorflow(venv_dir, artifacts_dir):
-
     # Load the virtual env
     load_venv(venv_dir)
 
@@ -395,7 +392,7 @@ def install_tensorflow(venv_dir, artifacts_dir):
 
     cmdpart = ["pip", "install"]
     if os.getenv("IN_DOCKER") != None:
-        cmdpart.append("--cache-dir="+pwd)
+        cmdpart.append("--cache-dir=" + pwd)
     cmd = cmdpart + ["-U", tf_wheel_files[0]]
     command_executor(cmd)
 
@@ -421,7 +418,7 @@ def build_ngraph_tf(build_dir, artifacts_location, ngtf_src_loc, venv_dir,
 
     cmdpart = ["pip"]
     if os.getenv("IN_DOCKER") != None:
-        cmdpart.append("--cache-dir="+pwd)
+        cmdpart.append("--cache-dir=" + pwd)
     cmd = cmdpart + ["list"]
     command_executor(cmd)
 
@@ -488,7 +485,7 @@ def install_ngraph_tf(venv_dir, ngtf_pip_whl):
 
     cmdpart = ["pip", "install"]
     if os.getenv("IN_DOCKER") != None:
-        cmdpart.append("--cache-dir="+os.getcwd())
+        cmdpart.append("--cache-dir=" + os.getcwd())
     cmd = cmdpart + ["-U", ngtf_pip_whl]
     command_executor(cmd)
 
@@ -502,7 +499,6 @@ def install_ngraph_tf(venv_dir, ngtf_pip_whl):
 
 
 def download_repo(target_name, repo, version):
-
     # First download to a temp folder
     call(["git", "clone", repo, target_name])
 
@@ -545,19 +541,20 @@ def start_container(workingdir, cachedir):
     abscachedir = os.path.abspath(cachedir)
     if os.path.isdir(abscachedir) == False:
         os.makedirs(abscachedir)
-    start = ["docker", "run", "--name", "ngtf", "-u", str(u)+":"+str(g), "-v", pwd+":/ngtf", "-v", pwd+"/tf:/tf", "-v", pwd+"/"+cachedir+":/bazel/"+cachedir, "-w", workingdir, "-d", "-t", "ngtf"]
+    start = ["docker", "run", "--name", "ngtf", "-u", str(u) + ":" + str(g), "-v", pwd + ":/ngtf", "-v",
+             pwd + "/tf:/tf", "-v", pwd + "/" + cachedir + ":/bazel/" + cachedir, "-w", workingdir, "-d", "-t", "ngtf"]
     try:
-        command_executor(start, stdout=open(os.devnull,"w"), stderr=open(os.devnull, "w"))
+        command_executor(start, stdout=open(os.devnull, "w"), stderr=open(os.devnull, "w"))
     except Exception as exc:
         msg = str(exc)
-        print("caught exception: "+msg)
+        print("caught exception: " + msg)
 
 
 def check_container():
-     exitcode, out, err = get_exitcode_stdout_stderr("docker inspect -f '{{.State.Running}}' ngtf")
-     if exitcode == 0:
-         return True
-     return False
+    exitcode, out, err = get_exitcode_stdout_stderr("docker inspect -f '{{.State.Running}}' ngtf")
+    if exitcode == 0:
+        return True
+    return False
 
 
 def stop_container():
@@ -568,26 +565,27 @@ def stop_container():
         command_executor(rm, stdout=open(os.devnull, "w"), stderr=open(os.devnull, "w"))
     except Exception as exc:
         msg = str(exc)
-        print("caught exception: "+msg)
+        print("caught exception: " + msg)
 
 
 def run_in_docker(buildcmd, cachedir, args):
     pwd = os.getcwd()
     u = os.getuid()
     g = os.getgid()
-    abscachedir = "/bazel/"+cachedir
-    cmd = ["docker", "exec", "-e" "IN_DOCKER=true", "-e", "USER="+os.getlogin(), "-e", "TEST_TMPDIR="+abscachedir, "-u", str(u)+":"+str(g), "-it", "ngtf"]
+    abscachedir = "/bazel/" + cachedir
+    cmd = ["docker", "exec", "-e" "IN_DOCKER=true", "-e", "USER=" + os.getlogin(), "-e", "TEST_TMPDIR=" + abscachedir,
+           "-u", str(u) + ":" + str(g), "-it", "ngtf"]
     vargs = vars(args)
     for arg in vargs:
         if arg not in ["run_in_docker", "build_base", "stop_container"]:
             if arg == "use_tensorflow_from_location":
-                buildcmd += " --"+arg+"=/"+str(vargs[arg])
+                buildcmd += " --" + arg + "=/" + str(vargs[arg])
             elif vargs[arg] in [False, None]:
                 pass
             elif vargs[arg] == True:
                 buildcmd += " --" + arg
             else:
-                buildcmd += " --"+arg+"="+str(vargs[arg])
+                buildcmd += " --" + arg + "=" + str(vargs[arg])
     cmd.append(buildcmd)
     command_executor(cmd)
 

@@ -28,7 +28,7 @@ def version_check(use_prebuilt_tensorflow):
                 raise Exception(
                     "Need GCC 4.8 to build using prebuilt TensorFlow\n"
                     "Gcc version installed: " + gcc_ver + "\n"
-                    "To build from source ommit `use_prebuilt_tensorflow`")
+                                                          "To build from source ommit `use_prebuilt_tensorflow`")
     # Check cmake version
     cmake_ver = get_cmake_version()
     if (int(cmake_ver[0]) < 3 or int(cmake_ver[1]) < 4):
@@ -97,7 +97,7 @@ def main():
     parser.add_argument(
         '--use_prebuilt_tensorflow',
         help="Skip building TensorFlow and use downloaded version.\n" +
-        "Note that in this case C++ unit tests won't be build for nGraph-TF bridge",
+             "Note that in this case C++ unit tests won't be build for nGraph-TF bridge",
         action="store_true")
 
     parser.add_argument(
@@ -134,7 +134,7 @@ def main():
         '--ngraph_version',
         type=str,
         help="nGraph version to use. Overridden by --ngraph_src_dir. (Default: "
-        + ngraph_version + ")\n",
+             + ngraph_version + ")\n",
         action="store")
 
     parser.add_argument(
@@ -186,9 +186,9 @@ def main():
         print("Building in with VERBOSE output messages\n")
         verbosity = True
 
-    #-------------------------------
+    # -------------------------------
     # Recipe
-    #-------------------------------
+    # -------------------------------
 
     version_check(arguments.use_prebuilt_tensorflow)
 
@@ -196,8 +196,8 @@ def main():
     build_dir = 'build_cmake'
 
     assert not (
-        arguments.use_tensorflow_from_location != '' and
-        arguments.use_prebuilt_tensorflow
+            arguments.use_tensorflow_from_location != '' and
+            arguments.use_prebuilt_tensorflow
     ), "\"use_tensorflow_from_location\" and \"use_prebuilt_tensorflow\" "
     "cannot be used together."
 
@@ -242,11 +242,11 @@ def main():
     artifacts_location = os.path.abspath(artifacts_location)
     print("ARTIFACTS location: " + artifacts_location)
 
-    #If artifacts doesn't exist create
+    # If artifacts doesn't exist create
     if not os.path.isdir(artifacts_location):
         os.mkdir(artifacts_location)
 
-    #install virtualenv
+    # install virtualenv
     install_virtual_env(venv_dir)
 
     # Load the virtual env
@@ -287,7 +287,7 @@ def main():
         # Install the found TF whl file
         cmdpart = ["pip", "install"]
         if os.getenv("IN_DOCKER") != None:
-            cmdpart.append("--cache-dir="+os.getcwd())
+            cmdpart.append("--cache-dir=" + os.getcwd())
         cmd = cmdpart + ["-U", tf_whl]
         command_executor(cmd)
         cxx_abi = get_tf_cxxabi()
@@ -322,7 +322,7 @@ def main():
             # Next install the tensorflow python packge
             cmdpart = ["pip", "install"]
             if os.getenv("IN_DOCKER") != None:
-                cmdpart.append("--cache-dir="+os.getcwd())
+                cmdpart.append("--cache-dir=" + os.getcwd())
             cmd = cmdpart + ["-U", "tensorflow==" + tf_version]
             command_executor(cmd)
             cxx_abi = get_tf_cxxabi()
@@ -411,7 +411,7 @@ def main():
     if arguments.build_plaidml_backend:
         cmdpart = ["pip", "install"]
         if os.getenv("IN_DOCKER") != None:
-            cmdpart.append("--cache-dir="+os.getcwd())
+            cmdpart.append("--cache-dir=" + os.getcwd())
         cmd = cmdpart + ["-U", "plaidML"]
         command_executor(cmd)
 
@@ -474,7 +474,7 @@ def main():
     ])
 
     if ((arguments.distributed_build == "OMPI") or
-        (arguments.distributed_build == "MLSL")):
+            (arguments.distributed_build == "MLSL")):
         ngraph_tf_cmake_flags.extend(["-DNGRAPH_DISTRIBUTED_ENABLE=TRUE"])
     else:
         ngraph_tf_cmake_flags.extend(["-DNGRAPH_DISTRIBUTED_ENABLE=FALSE"])
@@ -527,7 +527,7 @@ def main():
             'cp', '-r', base_dir + '/tensorflow/tensorflow/python',
             os.path.join(artifacts_location, "tensorflow")
         ],
-                         verbose=True)
+            verbose=True)
     else:
         # Create a sym-link to
         link_src = os.path.join(artifacts_location,
